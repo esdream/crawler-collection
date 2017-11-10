@@ -34,11 +34,15 @@ class ProgressBar(object):
 
 def main():
 
-    url = 'http://www.consortium.ri.cmu.edu/data/ck/CK+/Consent-for-publication.doc'
-    file_name = 'Consent-for-publication.doc'
+    url = 'http://www.consortium.ri.cmu.edu/data/ck/CK+/Landmarks.zip'
+    file_name = 'Landmarks.zip'
+
+    session = requests.Session()
+    session.auth = (
+        '80e9e7eb5d76bfd5715491fee388e4765429b249030857adb2788d2bd72a8c1bHlUnyZjv6OzeymRWJ4cMKloz3w8', 'ber+nYA9Nt64Ta/SJlaZa21owM4')
 
     # 设置get请求的stream参数为Ture，这样会推迟下载响应体直到访问Reponse.content属性
-    with closing(requests.get(url, stream=True)) as response:
+    with closing(session.get(url, stream=True)) as response:
         chunk_size = 1024 # 单次请求最大值
         content_size = int(response.headers['content-length']) # 内容体总大小
         progress = ProgressBar(file_name, total=content_size, unit="KB",
