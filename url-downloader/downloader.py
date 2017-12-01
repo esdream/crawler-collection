@@ -34,15 +34,24 @@ class ProgressBar(object):
 
 def main():
 
-    url = 'http://www.consortium.ri.cmu.edu/data/ck/CK+/Landmarks.zip'
-    file_name = 'Landmarks.zip'
-
+    url = input('请输入要获取数据的完整URL: ')
     session = requests.Session()
-    session.auth = (
-        '80e9e7eb5d76bfd5715491fee388e4765429b249030857adb2788d2bd72a8c1bHlUnyZjv6OzeymRWJ4cMKloz3w8', 'ber+nYA9Nt64Ta/SJlaZa21owM4')
+
+    # url = 'http://www.consortium.ri.cmu.edu/data/ck/CK+/Landmarks.zip'
+    # file_name = 'Landmarks.zip'
+
+    is_auth = input('是否需要进行身份验证，是请输入1，否请输入0: ')
+
+    if(int(is_auth) == 1):
+        access_id = input('请输入access id: ')
+        access_key = input('请输入access key: ')
+        # session.auth = (
+        #     '80e9e7eb5d76bfd5715491fee388e4765429b249030857adb2788d2bd72a8c1bHlUnyZjv6OzeymRWJ4cMKloz3w8', 'ber+nYA9Nt64Ta/SJlaZa21owM4')
+        session.auth = (access_id, access_key)
 
     # 设置get请求的stream参数为Ture，这样会推迟下载响应体直到访问Reponse.content属性
     with closing(session.get(url, stream=True)) as response:
+        file_name = url.split('/')[-1]
         chunk_size = 1024 # 单次请求最大值
         content_size = int(response.headers['content-length']) # 内容体总大小
         progress = ProgressBar(file_name, total=content_size, unit="KB",
